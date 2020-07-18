@@ -21,13 +21,14 @@ stock_vis = pd.read_csv('IBM_Stock_Month_Year_Date.csv')
 server = app.server
 
 app.layout = html.Div([
-    html.H2('Hello World'),
+    html.H2('IBM Stock Price Prediction (Time Series)'),
     dcc.Dropdown(
         id='dropdown',
         options=[{'label': i, 'value': i} for i in ['Open/Close/High/Low Stock Prices', 'Average Price & Volume over Years', 'Average Price & Volume for each Months', 'Average Price & Volume for each days of month', 'Stock Prediction']],
         value='Stock Prediction'
     ),
-    dcc.Graph(id="graph_with_selection")
+    dcc.Graph(id="graph_with_selection"),
+    html.P(id="slider_prediction")
 ])
 
 @app.callback(dash.dependencies.Output('graph_with_selection', 'figure'),
@@ -98,7 +99,7 @@ def display_value(value):
         return fig
     else:
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=stock_train['Date'].tail(500), y=stock_train['Open'].tail(500),
+        fig.add_trace(go.Scatter(x=stock_train['Date'], y=stock_train['Open'],
                             mode='lines',
                             name='Training Stock Price'))
         fig.add_trace(go.Scatter(x=stock_test_pred['Date'], y=stock_test_pred['Open'],
